@@ -14,6 +14,28 @@ export default function App() {
   const [tone, setTone] = useState(TONES[0].value)
   const [text, setText] = useState('')
   const [copied, setCopied] = useState(false)
+  const [grid, setGrid] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('df_layout') === 'grid'
+    } catch {
+      return false
+    }
+  })
+
+  const chipsClass = grid ? 'chip-grid' : 'chip-row'
+
+  const toggleLayout = useCallback(() => {
+    tapHaptic('light')
+    setGrid((g) => {
+      const next = !g
+      try {
+        localStorage.setItem('df_layout', next ? 'grid' : 'row')
+      } catch {
+        /* ignore */
+      }
+      return next
+    })
+  }, [])
 
   const current = useMemo(
     () => TOOLS.find((t) => t.id === toolId) ?? TOOLS[0],
@@ -82,9 +104,18 @@ export default function App() {
             </h1>
             <p>Craft anything, beautifully.</p>
           </div>
+          <button
+            type="button"
+            className="layout-toggle"
+            onClick={toggleLayout}
+            aria-label={grid ? 'Switch to row layout' : 'Switch to grid layout'}
+            title={grid ? 'Row view' : 'Grid view'}
+          >
+            {grid ? '≡' : '▦'}
+          </button>
         </header>
 
-        <nav className="chip-row" aria-label="Tool">
+        <nav className={chipsClass} aria-label="Tool">
           {TOOLS.map((t) => (
             <button
               key={t.id}
@@ -124,7 +155,7 @@ export default function App() {
 
           <div className="tone-block">
             <label className="field-label">Tone</label>
-            <div className="chip-row" aria-label="Tone">
+            <div className={chipsClass} aria-label="Tone">
               {TONES.map((t) => (
                 <button
                   key={t.value}

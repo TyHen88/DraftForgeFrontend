@@ -3,21 +3,21 @@ import { useCallback, useMemo, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 
 import { ApiError, generate } from './api'
-import { MAX_INPUT_CHARS, MODES, TONES } from './config'
+import { MAX_INPUT_CHARS, TONES, TOOLS } from './config'
 import { getInitData, insideTelegram, tapHaptic, useAppearance } from './telegram'
 
 export default function App() {
   const appearance = useAppearance()
   const inTelegram = insideTelegram()
 
-  const [mode, setMode] = useState(MODES[0].value)
+  const [toolId, setToolId] = useState(TOOLS[0].id)
   const [tone, setTone] = useState(TONES[0].value)
   const [text, setText] = useState('')
   const [copied, setCopied] = useState(false)
 
   const current = useMemo(
-    () => MODES.find((m) => m.value === mode) ?? MODES[0],
-    [mode],
+    () => TOOLS.find((t) => t.id === toolId) ?? TOOLS[0],
+    [toolId],
   )
 
   const mutation = useMutation({
@@ -26,7 +26,10 @@ export default function App() {
       if (!initData) {
         throw new ApiError(401, 'Open this app from the Telegram bot to generate.')
       }
-      return generate({ mode, text: text.trim(), tone }, initData)
+      return generate(
+        { mode: current.mode, text: text.trim(), tone, template: current.template },
+        initData,
+      )
     },
   })
 
@@ -81,19 +84,19 @@ export default function App() {
           </div>
         </header>
 
-        <nav className="chip-row" aria-label="Mode">
-          {MODES.map((m) => (
+        <nav className="chip-row" aria-label="Tool">
+          {TOOLS.map((t) => (
             <button
-              key={m.value}
+              key={t.id}
               type="button"
-              className={`chip${m.value === mode ? ' is-active' : ''}`}
-              aria-pressed={m.value === mode}
-              onClick={() => pick(setMode, m.value)}
+              className={`chip${t.id === toolId ? ' is-active' : ''}`}
+              aria-pressed={t.id === toolId}
+              onClick={() => pick(setToolId, t.id)}
             >
               <span className="emoji" aria-hidden>
-                {m.icon}
+                {t.icon}
               </span>
-              {m.label}
+              {t.label}
             </button>
           ))}
         </nav>

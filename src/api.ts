@@ -57,5 +57,14 @@ export async function generate(
     throw new ApiError(res.status, await parseError(res))
   }
 
-  return res.json() as Promise<GenerateResult>
+  try {
+    return (await res.json()) as GenerateResult
+  } catch {
+    // A 200 with a non-JSON body usually means the request hit the web host instead of
+    // the API — i.e. VITE_API_BASE_URL isn't pointing at the backend.
+    throw new ApiError(
+      res.status,
+      'Unexpected response from the server. Check that VITE_API_BASE_URL points to the backend API.',
+    )
+  }
 }

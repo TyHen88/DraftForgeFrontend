@@ -3,26 +3,32 @@
 export interface ModeOption {
   value: string
   label: string
+  icon: string
   placeholder: string
 }
 
 export const MODES: ModeOption[] = [
-  { value: 'email', label: 'Email', placeholder: 'What should the email say?' },
-  { value: 'reply', label: 'Reply', placeholder: 'Paste the message you are replying to.' },
-  { value: 'improve', label: 'Improve', placeholder: 'Paste text to make clearer.' },
-  { value: 'rewrite', label: 'Rewrite', placeholder: 'Paste text to paraphrase.' },
-  { value: 'grammar', label: 'Grammar', placeholder: 'Paste text to fix.' },
-  { value: 'explain', label: 'Explain', placeholder: 'Enter a term, word, or phrase.' },
-  { value: 'idea', label: 'Ideas', placeholder: 'What topic do you need ideas for?' },
+  { value: 'email', label: 'Email', icon: '✉️', placeholder: 'What should the email say?' },
+  { value: 'reply', label: 'Reply', icon: '💬', placeholder: 'Paste the message you are replying to…' },
+  { value: 'improve', label: 'Improve', icon: '✨', placeholder: 'Paste text to make clearer…' },
+  { value: 'rewrite', label: 'Rewrite', icon: '🔁', placeholder: 'Paste text to paraphrase…' },
+  { value: 'grammar', label: 'Grammar', icon: '✅', placeholder: 'Paste text to fix…' },
+  { value: 'explain', label: 'Explain', icon: '💡', placeholder: 'Enter a term, word, or phrase…' },
+  { value: 'idea', label: 'Ideas', icon: '🧠', placeholder: 'What topic do you need ideas for?' },
 ]
 
-export const TONES = [
-  'professional',
-  'friendly',
-  'academic',
-  'marketing',
-  'storytelling',
-] as const
+export interface ToneOption {
+  value: string
+  icon: string
+}
+
+export const TONES: ToneOption[] = [
+  { value: 'professional', icon: '💼' },
+  { value: 'friendly', icon: '😊' },
+  { value: 'academic', icon: '🎓' },
+  { value: 'marketing', icon: '📣' },
+  { value: 'storytelling', icon: '📖' },
+]
 
 // Matches the backend default `MAX_INPUT_CHARS`.
 export const MAX_INPUT_CHARS = 8000

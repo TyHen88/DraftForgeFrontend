@@ -1,4 +1,5 @@
 import {
+  hapticFeedback,
   init,
   isTMA,
   miniApp,
@@ -69,4 +70,15 @@ export function getInitData(): string | undefined {
 export function useAppearance(): 'light' | 'dark' {
   const dark = useSignal(miniApp.isDark)
   return dark ? 'dark' : 'light'
+}
+
+/** Fire a light impact haptic when available — a no-op outside Telegram. */
+export function tapHaptic(style: 'light' | 'medium' | 'heavy' = 'light'): void {
+  try {
+    if (hapticFeedback.impactOccurred.isAvailable()) {
+      hapticFeedback.impactOccurred(style)
+    }
+  } catch {
+    /* ignore */
+  }
 }

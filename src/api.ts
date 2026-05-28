@@ -54,6 +54,14 @@ export async function generate(
         `Rate limit reached${retry ? ` — try again in ${retry}s.` : '.'}`,
       )
     }
+    if (res.status === 404 || res.status === 405) {
+      // The request reached a host that has no /api/generate — almost always the static web
+      // host, meaning VITE_API_BASE_URL isn't pointing at the backend.
+      throw new ApiError(
+        res.status,
+        'API not reachable here. Set VITE_API_BASE_URL to the backend URL and redeploy.',
+      )
+    }
     throw new ApiError(res.status, await parseError(res))
   }
 

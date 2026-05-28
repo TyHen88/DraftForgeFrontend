@@ -4,6 +4,7 @@ import {
   isTMA,
   miniApp,
   retrieveRawInitData,
+  swipeBehavior,
   themeParams,
   useSignal,
   viewport,
@@ -38,6 +39,15 @@ export function initTelegram(): boolean {
   }
   try {
     void viewport.mount()
+    // Expand to full height so content has room to scroll.
+    if (viewport.expand.isAvailable()) viewport.expand()
+  } catch {
+    /* ignore */
+  }
+  try {
+    // Let vertical drags scroll the page instead of dragging the app closed.
+    if (swipeBehavior.mount.isAvailable()) swipeBehavior.mount()
+    if (swipeBehavior.disableVertical.isAvailable()) swipeBehavior.disableVertical()
   } catch {
     /* ignore */
   }

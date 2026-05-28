@@ -54,6 +54,12 @@ body,
   min-height: 100%;
 }
 
+/* Clip horizontal overflow (from the fixed background blobs) at the document level so the
+   page still scrolls vertically. Doing this on .app would trap it as its own scroller. */
+html {
+  overflow-x: hidden;
+}
+
 body {
   background: #0b0d13;
   font-family: var(--font);
@@ -75,7 +81,6 @@ body {
   min-height: 100dvh;
   background: var(--bg);
   color: var(--text);
-  overflow-x: hidden;
 }
 
 .shell {

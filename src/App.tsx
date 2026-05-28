@@ -86,6 +86,23 @@ export default function App() {
     }
   }, [mutation.data])
 
+  const pasteText = useCallback(async () => {
+    try {
+      const clip = await navigator.clipboard.readText()
+      if (clip) {
+        setText((prev) => (prev ? `${prev}\n${clip}` : clip))
+        tapHaptic('light')
+      }
+    } catch {
+      /* clipboard read blocked */
+    }
+  }, [])
+
+  const clearText = useCallback(() => {
+    setText('')
+    tapHaptic('light')
+  }, [])
+
   return (
     <div className="app" data-appearance={appearance}>
       <div className="blobs" aria-hidden>
@@ -133,9 +150,33 @@ export default function App() {
         </nav>
 
         <section className="card">
-          <label className="field-label" htmlFor="text">
-            {current.label} · your text
-          </label>
+          <div className="field-head">
+            <label className="field-label" htmlFor="text">
+              {current.label} · your text
+            </label>
+            <div className="field-actions">
+              <button
+                type="button"
+                className="icon-btn"
+                onClick={pasteText}
+                aria-label="Paste from clipboard"
+                title="Paste"
+              >
+                📋
+              </button>
+              {text && (
+                <button
+                  type="button"
+                  className="icon-btn"
+                  onClick={clearText}
+                  aria-label="Clear text"
+                  title="Clear"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
           <textarea
             id="text"
             className="input"
@@ -167,7 +208,7 @@ export default function App() {
                   <span className="emoji" aria-hidden>
                     {t.icon}
                   </span>
-                  {t.value}
+                  {t.label}
                 </button>
               ))}
             </div>
@@ -200,7 +241,9 @@ export default function App() {
           <section className="card result">
             <div className="result-head">
               <span className="tag">{mutation.data.mode}</span>
-              <span className="tag ghost">{mutation.data.tone}</span>
+              {mutation.data.tone && mutation.data.tone !== 'default' && (
+                <span className="tag ghost">{mutation.data.tone}</span>
+              )}
             </div>
             <div className="result-text">{mutation.data.result}</div>
             <div className="result-actions">

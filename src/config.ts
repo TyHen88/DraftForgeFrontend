@@ -34,15 +34,19 @@ export const TOOLS: Tool[] = [
 
 export interface ToneOption {
   value: string
+  label: string
   icon: string
 }
 
+// Tone is optional — "Auto" (value 'default') applies no specific tone, which the backend
+// treats as "no preference". The tools themselves already imply a style.
 export const TONES: ToneOption[] = [
-  { value: 'professional', icon: '💼' },
-  { value: 'friendly', icon: '😊' },
-  { value: 'academic', icon: '🎓' },
-  { value: 'marketing', icon: '📣' },
-  { value: 'storytelling', icon: '📖' },
+  { value: 'default', label: 'Auto', icon: '🎚️' },
+  { value: 'professional', label: 'Professional', icon: '💼' },
+  { value: 'friendly', label: 'Friendly', icon: '😊' },
+  { value: 'academic', label: 'Academic', icon: '🎓' },
+  { value: 'marketing', label: 'Marketing', icon: '📣' },
+  { value: 'storytelling', label: 'Storytelling', icon: '📖' },
 ]
 
 // Matches the backend default `MAX_INPUT_CHARS`.
